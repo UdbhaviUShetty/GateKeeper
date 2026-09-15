@@ -1,0 +1,70 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: gatekeeper-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: gatekeeper-backend
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+
+  gateway:
+    build:
+      context: .
+      dockerfile: apps/gateway/Dockerfile
+    container_name: gatekeeper-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      # Service names resolve via Docker's internal DNS between containers
+      # on the same compose network — "redis" and "backend" here are NOT
+      # localhost, they're the other services' container names.
+      REDIS_URL: redis://redis:6379
+      BACKEND_URL: http://backend:4000
+      # Required, no hardcoded fallback: a checked-in secret in a public
+      # portfolio repo is a real credential leak (anyone who reads the repo
+      # knows your admin key). Docker Compose reads ADMIN_API_KEY from a
+      # root .env file (gitignored — see .env.example for the template) or
+      # your shell environment. Compose fails fast at startup with a clear
+      # message if it's missing, rather than silently running an admin API
+      # anyone could authenticate against.
+      ADMIN_API_KEY: ${ADMIN_API_KEY:?Set ADMIN_API_KEY in a root .env file — copy .env.example to .env and fill in a real value first}
+    depends_on:
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: apps/dashboard/Dockerfile
+      args:
+        # Baked in at build time: the BROWSER (not the dashboard container)
+        # calls this URL, so it must be reachable from the host machine —
+        # the published port on localhost, not the Docker service name.
+        VITE_GATEWAY_URL: http://localhost:3000
+    container_name: gatekeeper-dashboard
+    ports:
+      - "5173:5173"
+    depends_on:
+      - gateway
+
+volumes:
+  redis-data:

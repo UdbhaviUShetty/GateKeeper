@@ -1,0 +1,100 @@
+/* ============================================================
+   GateKeeper Dashboard — design tokens
+   Aesthetic: an infra "control room" for a gate — near-black
+   surfaces, amber/black hazard-stripe accent for the gate motif,
+   green/red as the literal allow/block signal (not decorative —
+   it's the actual semantic meaning of the data).
+   Display type is monospace throughout: this is a tool for
+   reading precise numbers (tokens, ms, counts), not marketing copy.
+   ============================================================ */
+:root {
+  --bg: #0a0d14;
+  --surface: #12161f;
+  --surface-raised: #181d29;
+  --border: #232a3a;
+  --text: #e7ebf3;
+  --text-dim: #838da3;
+  --text-faint: #4d5568;
+
+  --amber: #f5a623;
+  --amber-dim: #8a6524;
+  --allowed: #3ddc84;
+  --allowed-dim: #1c4d33;
+  --blocked: #ff5d5d;
+  --blocked-dim: #5a2323;
+
+  --font-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(245, 166, 35, 0.08), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-mono);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+code, .mono { font-family: var(--font-mono); }
+
+a { color: var(--amber); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+button {
+  font-family: var(--font-sans);
+  cursor: pointer;
+}
+
+::selection { background: var(--amber-dim); }
+
+button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

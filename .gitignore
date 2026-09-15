@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment / secrets — never commit real values, only .env.example
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS/editor cruft
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+
+# Test/coverage artifacts
+coverage/
+
+# k6 output (if run locally with --out or summary export)
+tests/load/*.json

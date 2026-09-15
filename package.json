@@ -1,0 +1,16 @@
+{
+  "name": "gatekeeper",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/gateway",
+    "apps/backend",
+    "apps/dashboard",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev:gateway": "npm run dev -w apps/gateway",
+    "build:gateway": "npm run build -w apps/gateway",
+    "test:gateway": "npm run test -w apps/gateway"
+  }
+}
