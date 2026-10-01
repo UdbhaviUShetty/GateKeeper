@@ -1,8 +1,7 @@
 FROM node:22-slim AS build
 WORKDIR /repo
 
-ARG VITE_GATEWAY_URL
-ENV VITE_GATEWAY_URL=${VITE_GATEWAY_URL}
+   ENV VITE_GATEWAY_URL=https://gatekeeper-gateway.onrender.com
 
 COPY package.json package-lock.json ./
 COPY apps/dashboard/package.json apps/dashboard/package.json
